@@ -1,1 +1,542 @@
 
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#722c55">
+<title>تولدت مبارک فائزه ❤️</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Tahoma,Arial,sans-serif;
+ background:#fff5f8;color:#49303e;
+ min-height:100vh;line-height:1.9;
+}
+button,input,textarea{font-family:inherit}
+button{
+ border:0;border-radius:12px;padding:12px 20px;
+ cursor:pointer;font-size:14px;
+}
+.primary{background:#a83d70;color:white}
+.secondary{background:#f2dce7;color:#713650}
+.danger{background:#ffe0e0;color:#a22}
+header{
+ padding:65px 18px 45px;text-align:center;
+ color:white;background:linear-gradient(135deg,#7e315c,#d66d9a);
+ background-size:cover;background-position:center;
+ position:relative;
+}
+header h1{font-size:34px;margin:0 0 15px}
+header p{font-size:17px;max-width:650px;margin:auto}
+.container{max-width:850px;margin:auto;padding:20px}
+.card{
+ background:white;border-radius:20px;padding:24px;
+ margin:20px 0;box-shadow:0 5px 25px #71365012;
+}
+h2{color:#a83d70;margin-top:0}
+.center{text-align:center}
+input,textarea{
+ width:100%;padding:12px;border:1px solid #e5cad7;
+ border-radius:10px;margin:8px 0 15px;
+ font-size:14px;background:white;color:#49303e;
+}
+textarea{min-height:100px;resize:vertical}
+label{font-size:14px;font-weight:bold}
+.media{width:100%;border-radius:14px;margin-top:12px}
+.question{border-top:1px solid #f2e1e9;padding-top:18px;margin-top:18px}
+.hidden{display:none!important}
+footer{text-align:center;padding:25px;color:#96627c}
+.admin-link{
+ position:absolute;top:12px;left:12px;
+ background:#ffffff30;color:white;border:1px solid #ffffff60;
+}
+#adminPanel{display:none}
+#adminPanel.open{display:block}
+#loginPanel{max-width:450px;margin:30px auto}
+#answers div{
+ background:#fff5f8;padding:13px;border-radius:10px;margin:10px 0;
+ overflow-wrap:anywhere
+}
+#qr{display:inline-block;background:white;padding:12px;border-radius:12px}
+.small{font-size:12px;color:#987b89}
+.status{font-size:13px;margin:12px 0}
+hr{border:0;border-top:1px solid #f0e0e8;margin:22px 0}
+</style>
+</head>
+
+<body>
+
+<header id="hero">
+<button class="admin-link" onclick="showLogin()">مدیریت</button>
+<h1 id="mainTitle">تولدت مبارک فائزه ❤️</h1>
+<p id="mainText">امروز روز قشنگی است؛ روزی که دنیا با آمدنت زیباتر شد.</p>
+</header>
+
+<main class="container">
+
+<section class="card center">
+<h2>یک روز خاص برای یک آدم خاص 🌹</h2>
+<p id="introText">امیدوارم سال جدید زندگی‌ات پر از لبخند، آرامش و اتفاق‌های قشنگ باشد.</p>
+</section>
+
+<section class="card">
+<h2>🎬 کلیپ مخصوص تو</h2>
+<div id="videoArea" class="center">
+<p class="small">هنوز کلیپی بارگذاری نشده است.</p>
+</div>
+</section>
+
+<section class="card">
+<h2>🎧 یک پیام صوتی برای تو</h2>
+<div id="audioArea" class="center">
+<p class="small">هنوز پیام صوتی بارگذاری نشده است.</p>
+</div>
+</section>
+
+<section class="card">
+<h2>💌 دو سؤال کوچک</h2>
+<p id="questionIntro">دوست دارم جواب این دو سؤال را از زبان خودت بدانم.</p>
+
+<form id="answerForm">
+<div class="question">
+<label id="question1Label">۱. قشنگ‌ترین آرزویت چیست؟</label>
+<textarea id="answer1" required placeholder="پاسخت را اینجا بنویس..."></textarea>
+</div>
+
+<div class="question">
+<label id="question2Label">۲. اگر بخواهی یک آرزو برای سال جدیدت داشته باشی، چیست؟</label>
+<textarea id="answer2" required placeholder="پاسخت را اینجا بنویس..."></textarea>
+</div>
+
+<button class="primary" type="submit" style="width:100%">ارسال پاسخ‌ها ❤️</button>
+<p id="answerStatus" class="status center"></p>
+</form>
+</section>
+
+<section class="card center">
+<h2>📱 آدرس اختصاصی این صفحه</h2>
+<p>با اسکن این کد می‌توانی دوباره به این صفحه برگردی.</p>
+<div id="qr"></div>
+<p class="small" id="siteAddress"></p>
+</section>
+
+</main>
+
+<footer>با بهترین آرزوها برای تو ❤️</footer>
+
+<!-- پنل مدیریت -->
+
+<section id="adminPanel" class="container">
+
+<div class="card" id="loginPanel">
+<h2 class="center">ورود مدیر سایت 🔐</h2>
+<label>ایمیل مدیر</label>
+<input type="email" id="adminEmail" placeholder="ایمیل حساب Supabase">
+<label>رمز عبور</label>
+<input type="password" id="adminPassword" placeholder="رمز عبور">
+<button class="primary" onclick="login()" style="width:100%">ورود به مدیریت</button>
+<p id="loginStatus" class="status center"></p>
+</div>
+
+<div id="adminContent" class="hidden">
+
+<div class="card">
+<h2>⚙️ مدیریت سایت</h2>
+<button class="secondary" onclick="logout()">خروج از پنل مدیریت</button>
+<hr>
+
+<label>عنوان اصلی صفحه</label>
+<input id="editTitle">
+
+<label>متن زیر عنوان</label>
+<textarea id="editText"></textarea>
+
+<label>متن معرفی صفحه</label>
+<textarea id="editIntro"></textarea>
+
+<label>متن ابتدای بخش سؤال‌ها</label>
+<input id="editQuestionIntro">
+
+<label>سؤال اول</label>
+<input id="editQuestion1">
+
+<label>سؤال دوم</label>
+<input id="editQuestion2">
+
+<label>رنگ پس‌زمینه سربرگ</label>
+<input type="color" id="editColor" value="#7e315c">
+
+<label>تصویر پس‌زمینه سربرگ</label>
+<input type="file" id="backgroundFile" accept="image/*">
+<button class="secondary" onclick="uploadBackground()">بارگذاری تصویر پس‌زمینه</button>
+
+<hr>
+
+<h2>🎬 بارگذاری کلیپ</h2>
+<input type="file" id="videoFile" accept="video/*">
+<button class="secondary" onclick="uploadMedia('video')">بارگذاری کلیپ</button>
+
+<hr>
+
+<h2>🎧 بارگذاری پیام صوتی</h2>
+<input type="file" id="audioFile" accept="audio/*">
+<button class="secondary" onclick="uploadMedia('audio')">بارگذاری پیام صوتی</button>
+
+<hr>
+<button class="primary" onclick="saveSettings()" style="width:100%">ذخیره همه تغییرات</button>
+<p id="adminStatus" class="status center"></p>
+</div>
+
+<div class="card">
+<h2>💌 پاسخ‌های فائزه</h2>
+<button class="secondary" onclick="loadAnswers()">به‌روزرسانی پاسخ‌ها</button>
+<div id="answers"></div>
+</div>
+
+<div class="card">
+<h2>💾 فضای ذخیره‌سازی</h2>
+<p id="storageInfo">در حال محاسبه...</p>
+</div>
+
+</div>
+</section>
+
+<script>
+const SUPABASE_URL = "https://pelmoyzhmkkpsgaejpza.supabase.co";
+const SUPABASE_KEY = "sb_publishable__6bkhr3bGeauRKhgOLzT3w_4vVxchyl";
+
+const BUCKET = "birthday-media";
+const ADMIN_UID = "a3bf3ebf-c0ad-4d1b-a8f2-b83d689ba923";
+
+const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+
+let settings = {
+ title:"تولدت مبارک فائزه ❤️",
+ text:"امروز روز قشنگی است؛ روزی که دنیا با آمدنت زیباتر شد.",
+ intro:"امیدوارم سال جدید زندگی‌ات پر از لبخند، آرامش و اتفاق‌های قشنگ باشد.",
+ questionIntro:"دوست دارم جواب این دو سؤال را از زبان خودت بدانم.",
+ question1:"۱. قشنگ‌ترین آرزویت چیست؟",
+ question2:"۲. اگر بخواهی یک آرزو برای سال جدیدت داشته باشی، چیست؟",
+ color:"#7e315c",
+ background:null,
+ video:null,
+ audio:null
+};
+
+function showStatus(id,msg){
+ document.getElementById(id).textContent=msg;
+}
+
+function showLogin(){
+ document.getElementById("adminPanel").classList.add("open");
+ document.getElementById("loginPanel").classList.remove("hidden");
+ document.getElementById("adminContent").classList.add("hidden");
+ window.scrollTo({top:document.getElementById("adminPanel").offsetTop,behavior:"smooth"});
+}
+
+async function loadSettings(){
+ const {data,error}=await db.from("site_settings")
+ .select("setting_value")
+ .eq("setting_key","main").maybeSingle();
+
+ if(data && data.setting_value){
+ settings={...settings,...data.setting_value};
+ }
+ renderSettings();
+}
+
+function renderSettings(){
+ document.title=settings.title;
+ document.getElementById("mainTitle").textContent=settings.title;
+ document.getElementById("mainText").textContent=settings.text;
+ document.getElementById("introText").textContent=settings.intro;
+ document.getElementById("questionIntro").textContent=settings.questionIntro;
+ document.getElementById("question1Label").textContent=settings.question1;
+ document.getElementById("question2Label").textContent=settings.question2;
+
+ const hero=document.getElementById("hero");
+ hero.style.backgroundColor=settings.color;
+
+ if(settings.background){
+ hero.style.backgroundImage="url("+JSON.stringify(settings.background).slice(1,-1)+")";
+ hero.style.backgroundColor="transparent";
+ }else{
+ hero.style.backgroundImage="linear-gradient(135deg,"+settings.color+",#d66d9a)";
+ }
+
+ document.getElementById("videoArea").innerHTML=settings.video
+ ? '<video class="media" controls playsinline preload="metadata" src="'+escapeAttr(settings.video.url)+'"></video>'
+ : '<p class="small">هنوز کلیپی بارگذاری نشده است.</p>';
+
+ document.getElementById("audioArea").innerHTML=settings.audio
+ ? '<audio class="media" controls preload="metadata" src="'+escapeAttr(settings.audio.url)+'"></audio>'
+ : '<p class="small">هنوز پیام صوتی بارگذاری نشده است.</p>';
+
+ makeQR();
+}
+
+function escapeAttr(s){
+ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+}
+
+function makeQR(){
+ const address=location.href.split("#")[0];
+ document.getElementById("siteAddress").textContent=address;
+ const target=document.getElementById("qr");
+ target.innerHTML="";
+ if(window.QRCode){
+ new QRCode(target,{text:address,width:170,height:170});
+ }else{
+ target.textContent="کتابخانه QR بارگذاری نشد.";
+ }
+}
+
+async function login(){
+ const email=document.getElementById("adminEmail").value.trim();
+ const password=document.getElementById("adminPassword").value;
+
+ showStatus("loginStatus","در حال بررسی اطلاعات...");
+
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+
+ if(error){
+ showStatus("loginStatus","ورود ناموفق: "+error.message);
+ return;
+ }
+
+ if(data.user.id!==ADMIN_UID){
+ await db.auth.signOut();
+ showStatus("loginStatus","این حساب اجازه مدیریت ندارد.");
+ return;
+ }
+
+ document.getElementById("loginPanel").classList.add("hidden");
+ document.getElementById("adminContent").classList.remove("hidden");
+
+ fillEditor();
+ await loadAnswers();
+ updateStorageInfo();
+}
+
+function fillEditor(){
+ document.getElementById("editTitle").value=settings.title;
+ document.getElementById("editText").value=settings.text;
+ document.getElementById("editIntro").value=settings.intro;
+ document.getElementById("editQuestionIntro").value=settings.questionIntro;
+ document.getElementById("editQuestion1").value=settings.question1;
+ document.getElementById("editQuestion2").value=settings.question2;
+ document.getElementById("editColor").value=settings.color;
+}
+
+async function logout(){
+ await db.auth.signOut();
+ document.getElementById("adminContent").classList.add("hidden");
+ document.getElementById("loginPanel").classList.remove("hidden");
+ document.getElementById("adminPassword").value="";
+ showStatus("loginStatus","از حساب مدیر خارج شدید.");
+}
+
+async function saveSettings(){
+ settings.title=document.getElementById("editTitle").value;
+ settings.text=document.getElementById("editText").value;
+ settings.intro=document.getElementById("editIntro").value;
+ settings.questionIntro=document.getElementById("editQuestionIntro").value;
+ settings.question1=document.getElementById("editQuestion1").value;
+ settings.question2=document.getElementById("editQuestion2").value;
+ settings.color=document.getElementById("editColor").value;
+
+ const {error}=await db.from("site_settings").upsert({
+ setting_key:"main",
+ setting_value:settings,
+ updated_at:new Date().toISOString()
+ },{onConflict:"setting_key"});
+
+ if(error){
+ showStatus("adminStatus","خطا در ذخیره: "+error.message);
+ return;
+ }
+
+ renderSettings();
+ showStatus("adminStatus","تغییرات با موفقیت ذخیره شد ❤️");
+}
+
+async function uploadFile(file,type){
+ if(!file)return null;
+
+ const maxSize=50*1024*1024;
+ if(file.size>maxSize){
+ throw new Error("حجم فایل بیش از ۵۰ مگابایت است.");
+ }
+
+ const extension=(file.name.split(".").pop()||"file").replace(/[^a-zA-Z0-9]/g,"");
+ const path=type+"/"+crypto.randomUUID()+"."+extension;
+
+ const {error}=await db.storage.from(BUCKET).upload(path,file,{
+ cacheControl:"3600",
+ upsert:false
+ });
+
+ if(error)throw error;
+
+ const {data}=db.storage.from(BUCKET).getPublicUrl(path);
+
+ return {
+ url:data.publicUrl,
+ path:path,
+ size:file.size,
+ name:file.name
+ };
+}
+
+async function removeOldFile(old){
+ if(!old || !old.path)return;
+ const {error}=await db.storage.from(BUCKET).remove([old.path]);
+ if(error)console.warn("حذف فایل قبلی انجام نشد:",error.message);
+}
+
+async function uploadBackground(){
+ const file=document.getElementById("backgroundFile").files[0];
+ if(!file)return showStatus("adminStatus","ابتدا تصویر انتخاب کنید.");
+
+ if(!file.type.startsWith("image/")){
+ return showStatus("adminStatus","فقط فایل تصویری مجاز است.");
+ }
+
+ try{
+ showStatus("adminStatus","در حال بارگذاری تصویر...");
+ const old=settings.backgroundFile;
+ const uploaded=await uploadFile(file,"background");
+ settings.background=uploaded.url;
+ settings.backgroundFile=uploaded;
+ renderSettings();
+ await saveSettings();
+ await removeOldFile(old);
+ showStatus("adminStatus","تصویر پس‌زمینه بارگذاری شد.");
+ }catch(e){
+ showStatus("adminStatus","خطا: "+e.message);
+ }
+}
+
+async function uploadMedia(type){
+ const input=document.getElementById(type+"File");
+ const file=input.files[0];
+ if(!file)return showStatus("adminStatus","ابتدا فایل را انتخاب کنید.");
+
+ if(type==="video" && !file.type.startsWith("video/")){
+ return showStatus("adminStatus","فایل انتخابی ویدئو نیست.");
+ }
+ if(type==="audio" && !file.type.startsWith("audio/")){
+ return showStatus("adminStatus","فایل انتخابی صوتی نیست.");
+ }
+
+ try{
+ showStatus("adminStatus","در حال بارگذاری فایل...");
+ const old=settings[type];
+ const uploaded=await uploadFile(file,type);
+ settings[type]=uploaded;
+ await saveSettings();
+ await removeOldFile(old);
+ renderSettings();
+ input.value="";
+ showStatus("adminStatus","فایل با موفقیت بارگذاری شد.");
+ updateStorageInfo();
+ }catch(e){
+ showStatus("adminStatus","خطا در بارگذاری: "+e.message);
+ }
+}
+
+async function submitAnswers(event){
+ event.preventDefault();
+
+ const answer1=document.getElementById("answer1").value.trim();
+ const answer2=document.getElementById("answer2").value.trim();
+
+ if(!answer1 || !answer2){
+ showStatus("answerStatus","لطفاً به هر دو سؤال پاسخ دهید.");
+ return;
+ }
+
+ showStatus("answerStatus","در حال ارسال پاسخ‌ها...");
+
+ const rows=[
+ {question_number:1,answer:answer1},
+ {question_number:2,answer:answer2}
+ ];
+
+ const {error}=await db.from("birthday_answers").insert(rows);
+
+ if(error){
+ showStatus("answerStatus","ارسال پاسخ ناموفق بود: "+error.message);
+ return;
+ }
+
+ document.getElementById("answerForm").reset();
+ showStatus("answerStatus","پاسخ‌ها با موفقیت ثبت شدند. ممنون از تو ❤️");
+}
+
+document.getElementById("answerForm").addEventListener("submit",submitAnswers);
+
+async function loadAnswers(){
+ const {data,error}=await db.from("birthday_answers")
+ .select("*").order("created_at",{ascending:false});
+
+ if(error){
+ document.getElementById("answers").textContent="خطا: "+error.message;
+ return;
+ }
+
+ const area=document.getElementById("answers");
+ area.innerHTML="";
+
+ if(!data.length){
+ area.textContent="هنوز پاسخی ثبت نشده است.";
+ return;
+ }
+
+ data.forEach(item=>{
+ const box=document.createElement("div");
+ const heading=document.createElement("strong");
+ heading.textContent="پاسخ سؤال "+item.question_number;
+ const content=document.createElement("p");
+ content.textContent=item.answer;
+ const date=document.createElement("small");
+ date.textContent=new Date(item.created_at).toLocaleString("fa-IR");
+ box.append(heading,content,date);
+ area.appendChild(box);
+ });
+}
+
+function updateStorageInfo(){
+ const files=[
+ settings.video,settings.audio,settings.backgroundFile
+ ].filter(Boolean);
+
+ const total=files.reduce((sum,f)=>sum+(Number(f.size)||0),0);
+ const mb=(total/1024/1024).toFixed(2);
+ const percent=(total/(1024*1024*1024))*100;
+
+ document.getElementById("storageInfo").innerHTML=
+ "حجم فایل‌های فعلی سایت: <b>"+mb+" مگابایت</b><br>"+
+ "درصد تقریبی از یک گیگابایت: "+percent.toFixed(2)+"٪"+
+ (percent>=80?"<br><b style='color:#b22'>هشدار: حجم به ۸۰ درصد رسیده است.</b>":"")+
+ "<p class='small'>این محاسبه فقط فایل‌های فعلی ثبت‌شده در تنظیمات سایت را نشان می‌دهد، نه کل مصرف پروژه Supabase.</p>";
+}
+
+(async function start(){
+ try{
+ await loadSettings();
+ }catch(e){
+ console.error(e);
+ showStatus("answerStatus","اتصال به سرور ناموفق بود.");
+ }
+})();
+</script>
+
+</body>
+</html>
+
